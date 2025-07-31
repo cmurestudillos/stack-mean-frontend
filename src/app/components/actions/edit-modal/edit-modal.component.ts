@@ -17,24 +17,28 @@ export class EditModalComponent {
 
   usuarioData: any = {};
 
-  editForm =  this.fb.group({
+  editForm = this.fb.group({
     email: ['', Validators.required],
     first_name: ['', Validators.required],
     last_name: ['', Validators.required],
- });
+    avatar: ['https://www.w3schools.com/howto/img_avatar.png'],
+  });
 
-  constructor(public service: MeanService, private fb: FormBuilder) {};
+  constructor(
+    public service: MeanService,
+    private fb: FormBuilder
+  ) {}
 
-  setValue(){
+  setValue() {
     this.editForm.setValue({
       email: this.usuario.email,
       first_name: this.usuario.first_name,
-      last_name: this.usuario.last_name
-    })
+      last_name: this.usuario.last_name,
+    });
   }
 
   editarUsuario(usuario: any, id: number) {
-    this.service.editarUsuario(id, usuario.value).subscribe((resp) => {
+    this.service.editarUsuario(id, usuario.value).subscribe(resp => {
       this.usuario.email = resp.email;
       this.usuario.first_name = resp.first_name;
       this.usuario.last_name = resp.last_name;
@@ -58,10 +62,9 @@ export class EditModalComponent {
     return 'Debes introducir un apellido';
   }
 
-  resetForm(){
+  resetForm() {
     this.editForm.value.email = '';
     this.editForm.value.first_name = '';
     this.editForm.value.last_name = '';
   }
-
 }

@@ -17,6 +17,7 @@ export class AddModalComponent {
     email: new FormControl('', [Validators.required, Validators.email]),
     first_name: new FormControl('', Validators.required),
     last_name: new FormControl('', Validators.required),
+    avatar: new FormControl('https://www.w3schools.com/howto/img_avatar.png'),
   });
 
   constructor(public service: MeanService) {}
@@ -38,7 +39,7 @@ export class AddModalComponent {
   }
 
   addUser(usuario: any) {
-    this.service.agregarUsuario(usuario.value).subscribe((resp) => {
+    this.service.agregarUsuario(usuario.value).subscribe(resp => {
       this.addAction.emit(resp);
     });
     this.closeModal.nativeElement.click();
