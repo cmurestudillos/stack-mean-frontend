@@ -1,0 +1,16 @@
+# Directorios compilados
+/dist
+/build
+/coverage
+
+# Node
+/node_modules
+
+# Archivos generados
+*.min.js
+*.min.css
+
+# Otros
+package-lock.json
+yarn.lock
+*.md

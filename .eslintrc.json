@@ -1,0 +1,160 @@
+{
+    "root": true,
+    "ignorePatterns": ["projects/**/*"],
+    "plugins": ["@typescript-eslint", "prettier", "jsdoc"],
+    "overrides": [
+      {
+        "files": ["*.ts"],
+        "parserOptions": {
+          "project": ["tsconfig.json"],
+          "createDefaultProgram": true
+        },
+        "extends": ["plugin:@typescript-eslint/recommended", "plugin:prettier/recommended"],
+        "rules": {
+          // Formato y estilo
+          "max-len": [
+            "error",
+            {
+              "code": 140,
+              "ignoreUrls": true,
+              "ignoreStrings": true,
+              "ignoreTemplateLiterals": true,
+              "ignoreRegExpLiterals": true
+            }
+          ],
+          "semi": ["error", "always"],
+          "quotes": ["error", "single"],
+          "indent": ["error", 2],
+  
+          // Espaciado y formato
+          "array-bracket-spacing": ["error", "never"],
+          "object-curly-spacing": ["error", "always"],
+          "comma-dangle": ["error", "always-multiline"],
+          "no-multiple-empty-lines": ["error", { "max": 1 }],
+  
+          // Buenas prácticas
+          "no-console": ["warn", { "allow": ["warn", "error"] }],
+          "no-debugger": "warn",
+          "no-unused-vars": "off", // Usar la versión TypeScript
+          "@typescript-eslint/no-unused-vars": ["error"],
+          "eqeqeq": ["error", "always"],
+          "curly": "error",
+  
+          // Reglas específicas de TypeScript
+          "@typescript-eslint/explicit-function-return-type": [
+            "warn",
+            {
+              "allowExpressions": true,
+              "allowTypedFunctionExpressions": true
+            }
+          ],
+          "@typescript-eslint/explicit-member-accessibility": [
+            "error",
+            {
+              "accessibility": "explicit",
+              "overrides": {
+                "constructors": "no-public"
+              }
+            }
+          ],
+          "@typescript-eslint/member-ordering": [
+            "error",
+            {
+              "default": {
+                "memberTypes": [
+                  "public-field",
+                  "public-method",
+                  "protected-field",
+                  "protected-method",
+                  "private-field",
+                  "private-method"
+                ]
+              }
+            }
+          ],
+          "@typescript-eslint/no-explicit-any": "warn",
+          "@typescript-eslint/naming-convention": [
+            "error",
+            {
+              "selector": "interface",
+              "format": ["PascalCase"],
+              "prefix": ["I"]
+            },
+            {
+              "selector": "enum",
+              "format": ["PascalCase"]
+            }
+          ],
+  
+          // Reglas de importación
+          "sort-imports": [
+            "error",
+            {
+              "ignoreCase": true,
+              "ignoreDeclarationSort": true
+            }
+          ],
+  
+          // Reglas de Angular
+          "@angular-eslint/component-class-suffix": "error",
+          "@angular-eslint/directive-class-suffix": "error",
+          "@angular-eslint/no-empty-lifecycle-method": "error",
+          "@angular-eslint/use-pipe-transform-interface": "error",
+          "@angular-eslint/component-selector": [
+            "error",
+            {
+              "type": "element",
+              "prefix": "app",
+              "style": "kebab-case"
+            }
+          ],
+          "@angular-eslint/directive-selector": [
+            "error",
+            {
+              "type": "attribute",
+              "prefix": "app",
+              "style": "camelCase"
+            }
+          ],
+  
+          // Complejidad y mantenibilidad
+          "complexity": ["warn", 10],
+          "max-depth": ["warn", 4],
+          "max-lines-per-function": [
+            "warn",
+            {
+              "max": 50,
+              "skipBlankLines": true,
+              "skipComments": true
+            }
+          ],
+          "max-params": ["warn", 4],
+          "jsdoc/require-jsdoc": [
+            "error",
+            {
+              "require": {
+                "FunctionDeclaration": true,
+                "MethodDefinition": true,
+                "ClassDeclaration": true,
+                "ArrowFunctionExpression": true,
+                "FunctionExpression": true
+              }
+            }
+          ],
+          "jsdoc/require-param": "error",
+          "jsdoc/require-param-type": "error",
+          "jsdoc/require-param-description": "error",
+          "jsdoc/require-returns": "error",
+          "jsdoc/require-returns-type": "error",
+          "jsdoc/require-returns-description": "error"
+        }
+      },
+      {
+        "files": ["*.html"],
+        "extends": ["plugin:@angular-eslint/template/recommended"],
+        "rules": {
+          "max-len": ["error", { "code": 140 }]
+        }
+      }
+    ]
+  }

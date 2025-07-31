@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "NODE_OPTIONS='--openssl-legacy-provider' ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
@@ -33,12 +33,17 @@
     "@angular/compiler-cli": "~12.2.0",
     "@types/jasmine": "~3.8.0",
     "@types/node": "^12.20.37",
+    "eslint": "^9.32.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-jsdoc": "^52.0.1",
+    "eslint-plugin-prettier": "^5.5.3",
     "jasmine-core": "~3.8.0",
     "karma": "~6.3.0",
     "karma-chrome-launcher": "~3.1.0",
     "karma-coverage": "~2.0.3",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "~1.7.0",
+    "prettier": "^3.6.2",
     "typescript": "~4.3.5"
   }
 }

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { MeanService } from './../../services/mean.service';
+import { MeanService } from '../../services/mean.service';
 import Swal from 'sweetalert2';
 import { User } from 'src/app/interfaces/user';
 
