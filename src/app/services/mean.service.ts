@@ -1,42 +1,48 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 import { User } from '../interfaces/user';
+
+export interface UsuariosResponse {
+  data: User[];
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class MeanService {
-  private url: string = 'https://stack-api-service.vercel.app/api/usuarios';
-
-  constructor(private _http: HttpClient) {}
+  private readonly url = environment.apiUrl;
+  private readonly http = inject(HttpClient);
 
   // Peticion para listar todos los usuarios
-  listarUsuarios() {
-    return this._http.get(this.url);
+  listarUsuarios(): Observable<UsuariosResponse> {
+    return this.http.get<UsuariosResponse>(this.url);
   }
 
   // Peticion para agregar usuario
-  agregarUsuario(usuario: User): Observable<any> {
-    return this._http.post(this.url, usuario).pipe(
-      map((resp: any) => {
-        return resp;
-      })
-    );
+  agregarUsuario(usuario: Partial<User>): Observable<User> {
+    return this.http.post<User>(this.url, usuario);
   }
 
   // Peticion para editar usuario
-  editarUsuario(id: number, usuario: User) {
-    return this._http.put(this.url + '/' + id, usuario).pipe(
-      map((res: any) => {
-        return res;
-      })
-    );
+  editarUsuario(id: number, usuario: Partial<User>): Observable<User> {
+    return this.http.put<User>(`${this.url}/${id}`, usuario);
   }
 
   // Peticion para eliminar usuario
-  eliminarUsuario(id: number) {
-    return this._http.delete(this.url + '/' + id);
+  eliminarUsuario(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.url}/${id}`);
+  }
+
+  // reqres.in sirve sus avatares con `Cross-Origin-Resource-Policy: same-origin`, por lo que el
+  // navegador bloquea cargarlos directamente desde el frontend. Los servimos a través de nuestro
+  // propio backend (ver /api/usuarios/avatar) para evitar ese bloqueo.
+  getAvatarUrl(avatar: string | undefined): string | null {
+    if (!avatar) {
+      return null;
+    }
+    const origin = new URL(this.url).origin;
+    return `${origin}/api/usuarios/avatar?url=${encodeURIComponent(avatar)}`;
   }
 }

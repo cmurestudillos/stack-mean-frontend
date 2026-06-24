@@ -1,76 +1,100 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { CardModule } from 'primeng/card';
+import { AvatarModule } from 'primeng/avatar';
+import { ButtonModule } from 'primeng/button';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { MessageModule } from 'primeng/message';
+import { MessageService, ConfirmationService } from 'primeng/api';
 import { MeanService } from '../../services/mean.service';
-import Swal from 'sweetalert2';
-import { User } from 'src/app/interfaces/user';
+import { DEFAULT_AVATAR, User } from '../../interfaces/user';
+import { HeaderComponent } from '../shared/header/header.component';
+import { FooterComponent } from '../shared/footer/footer.component';
+import { EditModalComponent } from '../actions/edit-modal/edit-modal.component';
 
 @Component({
   selector: 'app-home',
+  standalone: true,
+  imports: [
+    CardModule,
+    AvatarModule,
+    ButtonModule,
+    ProgressSpinnerModule,
+    MessageModule,
+    HeaderComponent,
+    FooterComponent,
+    EditModalComponent,
+  ],
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {
-  usuarios!: User[];
-  usuario!: User;
-  actionList!: string;
-  editAction: boolean = false;
+  usuarios: User[] = [];
+  readonly defaultAvatar = DEFAULT_AVATAR;
+  loading = false;
+  loadError = false;
 
-  constructor(public service: MeanService) { }
+  private readonly service = inject(MeanService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly messageService = inject(MessageService);
+  private readonly confirmationService = inject(ConfirmationService);
 
   ngOnInit(): void {
     this.obtenerUsuarios();
   }
 
   obtenerUsuarios(): void {
-    this.service.listarUsuarios().subscribe((res:any) => {
-      this.usuarios = res.data;
-    }); 
+    this.loading = true;
+    this.loadError = false;
+    this.service
+      .listarUsuarios()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: res => {
+          this.usuarios = res.data;
+          this.loading = false;
+        },
+        error: () => {
+          this.loading = false;
+          this.loadError = true;
+          this.messageService.add({ severity: 'error', summary: 'No se ha podido obtener el listado de usuarios.' });
+        },
+      });
   }
 
-  onAddAction( $event: any ) {
-    this.usuarios.push($event);
-    Swal.fire({
-      position: 'top-end',
-      icon: 'success',
-      title: 'Usuario añadido con exito.',
-      showConfirmButton: false,
-      timer: 1500
-    })
-  }
-  
-  onUpdAction( $event: any ) {
-    this.usuarios = this.usuarios.map((item: any) => item.id === $event.id ? $event : item);
-    Swal.fire({
-      position: 'top-end',
-      icon: 'success',
-      title: 'Usuario modificado con exito.',
-      showConfirmButton: false,
-      timer: 1500
-    })
+  avatarSrc(usuario: User): string {
+    return this.service.getAvatarUrl(usuario.avatar) ?? this.defaultAvatar;
   }
 
-  eliminarUsuario(id: number){
-    // Verificar que va a eliminar el registro
-    Swal.fire({
-      title: '¿Esta seguro de querer eliminar el registro?',
-      showCancelButton: true,
-      confirmButtonText: 'Confirmar',
-      confirmButtonColor: '#198757',
-      cancelButtonText: 'Cancelar',
-      cancelButtonColor: '#db3448',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.service.eliminarUsuario(id).subscribe(resp => {
-          this.usuarios = this.usuarios.filter((value: any) => value.id !== id);
-        });
-        Swal.fire({
-          position: 'top-end',
-          icon: 'success',
-          title: 'Usuario eliminado con exito.',
-          showConfirmButton: false,
-          timer: 1500
-        })        
-      }
-    })    
+  onAddAction(usuario: User): void {
+    this.usuarios.push(usuario);
   }
 
+  onUpdAction(usuario: User): void {
+    this.usuarios = this.usuarios.map(item => (item.id === usuario.id ? usuario : item));
+  }
+
+  eliminarUsuario(id: number): void {
+    this.confirmationService.confirm({
+      header: 'Confirmar',
+      message: '¿Esta seguro de querer eliminar el registro?',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Confirmar',
+      rejectLabel: 'Cancelar',
+      accept: () => {
+        this.service
+          .eliminarUsuario(id)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe({
+            next: () => {
+              this.usuarios = this.usuarios.filter(usuario => usuario.id !== id);
+              this.messageService.add({ severity: 'success', summary: 'Usuario eliminado con éxito.', life: 1500 });
+            },
+            error: () => {
+              this.messageService.add({ severity: 'error', summary: 'No se ha podido eliminar el usuario.' });
+            },
+          });
+      },
+    });
+  }
 }

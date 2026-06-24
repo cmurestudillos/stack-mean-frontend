@@ -1,0 +1,34 @@
+name: PR Review Reminder
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  reminder:
+    runs-on: ubuntu-latest
+
+    permissions:
+      issues: write
+      pull-requests: write
+
+    steps:
+      - name: Add review comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `🧪 **Code Review Checklist**
+
+              Antes de hacer merge, revisa:
+
+              - [ ] He revisado mi propio código
+              - [ ] No hay errores evidentes
+              - [ ] He probado los cambios
+              - [ ] El código sigue buenas prácticas
+              - [ ] No introduzco bugs ni deuda técnica
+
+              💡 Recuerda: un buen PR = menos bugs en producción 🚀`})

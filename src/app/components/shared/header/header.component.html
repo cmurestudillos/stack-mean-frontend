@@ -1,21 +1,17 @@
-<header class="sticky-top">
-    <div class="d-inline-flex p-2 bd-highlight">
-        <div class="d-flex flex-row bd-highlight">
-            <div class="p-2 bd-highlight">
-                <img class="logo" src="assets/img/angular_logo.png" />
-            </div>
-            <div class="d-flex p-2 bd-highlight">
-                <div class="d-flex flex-row bd-highlight align-items-center">
-                    <div class="p-2 bd-highlight">
-                        <a class="enlace-header" [routerLink]="['/inicio']" routerLinkActive="active">Inicio</a>
-                    </div>
-                    <div class="p-2 bd-highlight">
-                        <a class="enlace-header" data-bs-toggle="modal" data-bs-target="#addModal">Añadir</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</header>
+<p-menubar [model]="items" class="app-menubar">
+  <ng-template #start>
+    <img class="logo" src="assets/img/angular_logo.png" alt="Angular logo" />
+    <span class="brand">MEAN Stack</span>
+  </ng-template>
+  <ng-template #end>
+    <p-button
+      [icon]="themeService.isDark() ? 'pi pi-sun' : 'pi pi-moon'"
+      [rounded]="true"
+      [text]="true"
+      severity="secondary"
+      (onClick)="themeService.toggleDarkMode()"
+      aria-label="Cambiar tema" />
+  </ng-template>
+</p-menubar>
 
 <app-add-modal #addModal [tituloModal]="'Añadir usuario'" (addAction)="onChangeData($event)"></app-add-modal>

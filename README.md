@@ -8,6 +8,6 @@ CRUD MEAN stack usando la api \"https://randomuser.me/\"
 
 ## Para ejecutar esta aplicación:
 * Clonar el repositorio: 'https://github.com/cmurestudillos/stack-mean-frontend.git'
-* Hay que tener instalado [npm](https://www.npmjs.com) y [node](https://nodejs.org/es/)
-* Siatuarse en el directorio raiz del proyecto e instalar las dependencias: `npm install`
-* Ejecutar el siguiente comando para arrancar la aplicación: `ng serve -o`
+* Hay que tener instalado [pnpm](https://pnpm.io) y [node](https://nodejs.org/es/)
+* Situarse en el directorio raíz del proyecto e instalar las dependencias: `pnpm install`
+* Ejecutar el siguiente comando para arrancar la aplicación: `pnpm start`

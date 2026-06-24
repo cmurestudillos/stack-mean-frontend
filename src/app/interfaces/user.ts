@@ -5,3 +5,5 @@ export interface User {
   email: string;
   avatar: string;
 }
+
+export const DEFAULT_AVATAR = 'https://www.w3schools.com/howto/img_avatar.png';

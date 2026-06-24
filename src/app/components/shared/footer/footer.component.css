@@ -1,13 +1,26 @@
 /* ============================================================================ */
-/* 
+/*
 /*  FOOTER
-/* 
+/*
 /* ============================================================================ */
-footer{
-    background: linear-gradient( 90deg,#000,rgba(247,28,0,.779) 100%,#00d4ff 0);
-    height: 48px;
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    width: 100%;
+footer {
+  background: var(--p-surface-900);
+  color: var(--p-surface-0);
+  padding: 1rem;
+  margin-top: auto;
+  border-top: 1px solid var(--p-surface-700);
+}
+
+.footer-content {
+  max-width: 1100px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.footer-content p {
+  margin: 0.15rem 0;
+}
+
+.footer-content small {
+  color: var(--p-surface-300);
 }

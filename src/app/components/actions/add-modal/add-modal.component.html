@@ -1,46 +1,32 @@
-<!-- Modal -->
-<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3 class="modal-title" id="exampleModalLabel">{{tituloModal}}</h3>
-          <button #closeModal type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <form [formGroup]="usuario" name="formUsuario" class=" example-form shadow p-3 mb-2 bg-white rounded">
-                <div class="row">
-                    <div class="col">
-                        <mat-form-field class="d-block example-full-width">
-                            <mat-label>Email</mat-label>
-                            <input matInput placeholder="user@reqres.in" formControlName="email" required>
-                            <mat-error *ngIf="usuario.value.email && usuario.value.email.invalid">{{getEmailErrorMessage()}}</mat-error>
-                        </mat-form-field>                
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <mat-form-field class="d-block example-full-width">
-                            <mat-label>First Name</mat-label>
-                            <input matInput placeholder="Iron" formControlName="first_name" required>
-                            <mat-error *ngIf="usuario.value.first_name && usuario.value.first_name.invalid">{{getFirtsNameErrorMessage()}}</mat-error>
-                        </mat-form-field>                
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <mat-form-field class="d-block example-full-width">
-                            <mat-label>Last Name</mat-label>
-                            <input matInput placeholder="Man" formControlName="last_name" required>
-                            <mat-error *ngIf="usuario.value.last_name && usuario.value.last_name.invalid">{{getLastNameErrorMessage()}}</mat-error>
-                        </mat-form-field>                   
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" (click)="addUser(usuario)" class="btn btn-success" [disabled]="!usuario.valid">Guardar cambios</button>
-        </div>
-      </div>
-    </div>
-  </div>
+<p-dialog [(visible)]="visible" [header]="tituloModal" [modal]="true" [style]="{ width: '28rem' }">
+  <form [formGroup]="usuario" class="add-form">
+    <p-floatlabel variant="on" class="field">
+      <input pInputText id="email" formControlName="email" class="w-full" />
+      <label for="email">Email</label>
+    </p-floatlabel>
+    @if (usuario.get('email')?.invalid && usuario.get('email')?.touched) {
+      <small class="error">{{ getEmailErrorMessage() }}</small>
+    }
+
+    <p-floatlabel variant="on" class="field">
+      <input pInputText id="first_name" formControlName="first_name" class="w-full" />
+      <label for="first_name">First Name</label>
+    </p-floatlabel>
+    @if (usuario.get('first_name')?.invalid && usuario.get('first_name')?.touched) {
+      <small class="error">{{ getFirtsNameErrorMessage() }}</small>
+    }
+
+    <p-floatlabel variant="on" class="field">
+      <input pInputText id="last_name" formControlName="last_name" class="w-full" />
+      <label for="last_name">Last Name</label>
+    </p-floatlabel>
+    @if (usuario.get('last_name')?.invalid && usuario.get('last_name')?.touched) {
+      <small class="error">{{ getLastNameErrorMessage() }}</small>
+    }
+  </form>
+
+  <ng-template #footer>
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="visible.set(false)" />
+    <p-button label="Guardar cambios" (onClick)="addUser()" [disabled]="!usuario.valid" />
+  </ng-template>
+</p-dialog>
