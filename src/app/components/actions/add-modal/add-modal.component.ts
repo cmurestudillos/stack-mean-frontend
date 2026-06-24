@@ -1,48 +1,68 @@
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { NgForm, FormGroup, FormControl, Validators } from '@angular/forms';
-import { MeanService } from 'src/app/services/mean.service';
+import { Component, EventEmitter, Input, Output, inject, signal } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { DialogModule } from 'primeng/dialog';
+import { InputTextModule } from 'primeng/inputtext';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { ButtonModule } from 'primeng/button';
+import { MessageService } from 'primeng/api';
+import { MeanService } from '../../../services/mean.service';
+import { DEFAULT_AVATAR, User } from '../../../interfaces/user';
 
 @Component({
   selector: 'app-add-modal',
+  standalone: true,
+  imports: [ReactiveFormsModule, DialogModule, InputTextModule, FloatLabelModule, ButtonModule],
   templateUrl: './add-modal.component.html',
   styleUrls: ['./add-modal.component.css'],
 })
 export class AddModalComponent {
   @Input() tituloModal!: string;
-  @Output() addAction: EventEmitter<any> = new EventEmitter();
-  @ViewChild('closeModal') closeModal!: ElementRef;
-  @ViewChild('formUsuario') formUsuario!: NgForm;
+  @Output() addAction = new EventEmitter<User>();
+
+  visible = signal(false);
 
   usuario = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
-    first_name: new FormControl('', Validators.required),
-    last_name: new FormControl('', Validators.required),
-    avatar: new FormControl('https://www.w3schools.com/howto/img_avatar.png'),
+    email: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
+    first_name: new FormControl('', { nonNullable: true, validators: Validators.required }),
+    last_name: new FormControl('', { nonNullable: true, validators: Validators.required }),
+    avatar: new FormControl(DEFAULT_AVATAR, { nonNullable: true }),
   });
 
-  constructor(public service: MeanService) {}
+  private readonly service = inject(MeanService);
+  private readonly messageService = inject(MessageService);
 
-  getEmailErrorMessage() {
-    if (this.usuario.value.email.hasError('required')) {
+  open(): void {
+    this.visible.set(true);
+  }
+
+  getEmailErrorMessage(): string {
+    const email = this.usuario.get('email');
+    if (email?.hasError('required')) {
       return 'Debes introducir un correo';
     }
 
-    return this.usuario.value.email.hasError('email') ? 'Email no valido' : '';
+    return email?.hasError('email') ? 'Email no valido' : '';
   }
 
-  getFirtsNameErrorMessage() {
+  getFirtsNameErrorMessage(): string {
     return 'Debes introducir un nombre';
   }
 
-  getLastNameErrorMessage() {
+  getLastNameErrorMessage(): string {
     return 'Debes introducir un apellido';
   }
 
-  addUser(usuario: any) {
-    this.service.agregarUsuario(usuario.value).subscribe(resp => {
-      this.addAction.emit(resp);
+  addUser(): void {
+    this.service.agregarUsuario(this.usuario.getRawValue()).subscribe({
+      next: resp => {
+        this.addAction.emit(resp);
+        this.visible.set(false);
+        this.usuario.reset({ avatar: DEFAULT_AVATAR });
+        this.messageService.add({ severity: 'success', summary: 'Usuario añadido con éxito.', life: 1500 });
+      },
+      error: () => {
+        this.messageService.add({ severity: 'error', summary: 'No se ha podido crear el usuario.' });
+      },
     });
-    this.closeModal.nativeElement.click();
-    this.usuario.reset();
   }
 }

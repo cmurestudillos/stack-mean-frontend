@@ -1,5 +1,48 @@
 /* ============================================================================ */
-/* 
+/*
 /*  HOME
-/* 
+/*
 /* ============================================================================ */
+.page-title {
+  margin: 0 0 1.5rem;
+  font-weight: 600;
+}
+
+.user-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.user-card-body {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-info h3 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.user-info p {
+  margin: 0.25rem 0 0;
+  color: var(--p-text-muted-color);
+  font-size: 0.9rem;
+}
+
+.user-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.state-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 3rem 1rem;
+  text-align: center;
+}

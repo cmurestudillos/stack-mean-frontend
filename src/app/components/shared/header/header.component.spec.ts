@@ -1,4 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
+import { MessageService } from 'primeng/api';
 
 import { HeaderComponent } from './header.component';
 
@@ -8,9 +11,9 @@ describe('HeaderComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ HeaderComponent ]
-    })
-    .compileComponents();
+      imports: [HeaderComponent],
+      providers: [provideRouter([]), provideHttpClient(), MessageService],
+    }).compileComponents();
   });
 
   beforeEach(() => {

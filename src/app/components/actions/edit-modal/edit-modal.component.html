@@ -1,48 +1,34 @@
-<button type="button" class="btn btn-warning text-white" data-bs-toggle="modal" [attr.data-bs-target]="'#editModal' + usuario.id" data-bs-whatever="usuarioData" [id]="usuario.id" (click)="setValue()">Editar</button>
+<p-button label="Editar" icon="pi pi-pencil" severity="warn" (onClick)="open()" />
 
-<!-- Modal -->
-<div class="modal fade" [attr.id]="'editModal' + usuario.id" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3 class="modal-title" id="exampleModalLabel">{{tituloModal}}</h3>
-          <button #closeModal type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <form [formGroup]="editForm" name="formUsuario" class=" example-form shadow p-3 mb-2 bg-white rounded">
-                <div class="row">
-                    <div class="col">
-                        <mat-form-field class="d-block example-full-width">
-                            <mat-label>Email</mat-label>
-                            <input matInput placeholder="user@reqres.in" formControlName="email" required>
-                            <mat-error *ngIf="editForm.value.email && editForm.value.email.invalid">{{getEmailErrorMessage()}}</mat-error>
-                        </mat-form-field>                
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <mat-form-field class="d-block example-full-width">
-                            <mat-label>First Name</mat-label>
-                            <input matInput placeholder="Iron" formControlName="first_name" required>
-                            <mat-error *ngIf="editForm.value.first_name && editForm.value.first_name.invalid">{{getFirtsNameErrorMessage()}}</mat-error>
-                        </mat-form-field>                
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <mat-form-field class="d-block example-full-width">
-                            <mat-label>Last Name</mat-label>
-                            <input matInput placeholder="Man" formControlName="last_name" required>
-                            <mat-error *ngIf="editForm.value.last_name && editForm.value.last_name.invalid">{{getLastNameErrorMessage()}}</mat-error>
-                        </mat-form-field>                   
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="resetForm()">Cancelar</button>
-          <button type="button" (click)="editarUsuario(editForm, usuario.id)" class="btn btn-success" [disabled]="!editForm.valid">Guardar cambios</button>
-        </div>
-      </div>
-    </div>
-  </div>
+<p-dialog [(visible)]="visible" [header]="tituloModal" [modal]="true" [style]="{ width: '28rem' }">
+  <form [formGroup]="editForm" class="edit-form">
+    <p-floatlabel variant="on" class="field">
+      <input pInputText id="edit-email" formControlName="email" class="w-full" />
+      <label for="edit-email">Email</label>
+    </p-floatlabel>
+    @if (editForm.get('email')?.invalid && editForm.get('email')?.touched) {
+      <small class="error">{{ getEmailErrorMessage() }}</small>
+    }
+
+    <p-floatlabel variant="on" class="field">
+      <input pInputText id="edit-first_name" formControlName="first_name" class="w-full" />
+      <label for="edit-first_name">First Name</label>
+    </p-floatlabel>
+    @if (editForm.get('first_name')?.invalid && editForm.get('first_name')?.touched) {
+      <small class="error">{{ getFirtsNameErrorMessage() }}</small>
+    }
+
+    <p-floatlabel variant="on" class="field">
+      <input pInputText id="edit-last_name" formControlName="last_name" class="w-full" />
+      <label for="edit-last_name">Last Name</label>
+    </p-floatlabel>
+    @if (editForm.get('last_name')?.invalid && editForm.get('last_name')?.touched) {
+      <small class="error">{{ getLastNameErrorMessage() }}</small>
+    }
+  </form>
+
+  <ng-template #footer>
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="visible.set(false)" />
+    <p-button label="Guardar cambios" (onClick)="editarUsuario()" [disabled]="!editForm.valid" />
+  </ng-template>
+</p-dialog>

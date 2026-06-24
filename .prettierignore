@@ -2,6 +2,7 @@
 /dist
 /build
 /coverage
+/.angular
 
 # Node
 /node_modules
@@ -12,5 +13,6 @@
 
 # Otros
 package-lock.json
+pnpm-lock.yaml
 yarn.lock
 *.md
